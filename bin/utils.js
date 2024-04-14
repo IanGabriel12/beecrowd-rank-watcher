@@ -21,6 +21,7 @@ function addPlayer(options) {
         const fileContent = fs.readFileSync(options.file, 'utf8');
         contest.players = fileContent.split("\n");
         contestInfo.save(contest);
+        console.log(`${contest.players.length} players added.`);
         return;
     }
 
