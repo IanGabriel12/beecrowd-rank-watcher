@@ -43,8 +43,31 @@ function addPlayer(options) {
     console.log(`Player ${playerName} successfuly added.`);
 }
 
+function removePlayer(options) {
+    const fs = require("node:fs");
+
+    if(!options._[1]) {
+        console.log("No username specified");
+        return;
+    }
+
+    const fileContent = fs.readFileSync("contestInfo.json");
+    const contest = JSON.parse(fileContent);
+    const playerName = options._[1];
+    const indexOfPlayer = contest.players.indexOf(playerName);
+    if(indexOfPlayer == -1) {
+        console.log("Player not found.");
+        return;
+    }
+
+    contest.players.splice(indexOfPlayer, 1);
+    fs.writeFileSync("contestInfo.json", JSON.stringify(contest));
+    console.log(`Player ${playerName} removed.`);
+}
+
 
 module.exports = {
     init: createContest,
-    addPlayer: addPlayer
+    addPlayer: addPlayer,
+    remPlayer: removePlayer
 }
