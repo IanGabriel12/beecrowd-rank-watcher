@@ -1,0 +1,23 @@
+{
+  "name": "beecrowd-rank-watcher",
+  "version": "1.0.0",
+  "description": "A CLI tool to filter and watch for contest's rank changes",
+  "main": "bin/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "beecrowd",
+    "icpc"
+  ],
+  "author": "Ian Gabriel",
+  "license": "ISC",
+  "bin": {
+    "beewatch": "./bin/index.js"
+  },
+  "dependencies": {
+    "readline-sync": "^1.4.10",
+    "yargs": "^17.7.2"
+  }
+}
