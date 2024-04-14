@@ -64,8 +64,81 @@ function removePlayer(options) {
 }
 
 
+const QUESTIONS = ['A', 'B', 'C', 'D'];
+function fetchPlayersQuestions() {
+    return {
+        "esther.wanderley.110": {
+            'A': true,
+            'B': true,
+            'C': true,
+            'D': true,
+        },
+        "beatriz.gouveia.111": {
+            'A': true,
+            'B': false,
+            'C': false,
+            'D': true,
+        },
+        "juliana.santiago.098" : {
+            'A': true,
+            'B': false,
+            'C': false,
+            'D': true,
+        },
+    };
+}
+
+
+function watchContestCallback(previousMap) {
+    console.log("NEW FETCH");
+    const playersQuestionsMap = fetchPlayersQuestions();
+    const newBalloons = [];
+
+    for(let player of Object.keys(previousMap)) {
+        if(!playersQuestionsMap[player]) continue;
+        for(let question of QUESTIONS) {
+
+            const prevValue = previousMap[player][question];
+            const newValue = playersQuestionsMap[player][question];
+
+            if(prevValue == false && newValue == true) {
+                newBalloons.push({player, question});
+            }
+        }
+    }
+
+    if(newBalloons.length == 0) {
+        console.log("No new balloons");
+    } else {
+        for(let entry of newBalloons) {
+            console.log(`Player ${entry.player} got problem ${entry.question}`);
+        }
+    }
+
+    return playersQuestionsMap;
+}
+
+function watchContestChanges() {
+    const contest = contestInfo.read();
+
+    let currMap = {};
+    for(let player of contest.players) {
+        currMap[player] = {}
+        for(let question of QUESTIONS) {
+            currMap[player][question] = false;
+        }
+    }
+
+    console.log(`Watching contest ${contest.name} with rank in ${contest.url}`);
+    setInterval(() => {
+        currMap = watchContestCallback(currMap);
+    }, 1000);
+}
+
+
 module.exports = {
     init: createContest,
     addPlayer: addPlayer,
-    remPlayer: removePlayer
+    remPlayer: removePlayer,
+    watch: watchContestChanges
 }

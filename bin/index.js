@@ -15,6 +15,9 @@ switch(options._[0]) {
     case "rem-player":
         utils.remPlayer(options);
         break;
+    case "watch":
+        utils.watch();
+        break;
     default:
         yargs.showHelp()
         break;
