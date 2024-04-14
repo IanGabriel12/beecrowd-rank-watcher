@@ -1,6 +1,7 @@
+const contestInfo = require("./file");
+
 function createContest() {
     const rl = require("readline-sync");
-    const fs = require("node:fs");
 
     const contest = {
         name: "",
@@ -10,17 +11,16 @@ function createContest() {
 
     contest.name = rl.question("Contest name: ");
     contest.url = rl.question("Contest rank url: ");
-    fs.writeFileSync("./contestInfo.json", JSON.stringify(contest));
+    contestInfo.save(contest);
 }
 
 function addPlayer(options) {
     const fs = require("node:fs");
     if(options.file) {
-        const contestFile = fs.readFileSync("contestInfo.json");
+        const contest = contestInfo.read();
         const fileContent = fs.readFileSync(options.file, 'utf8');
-        const contest = JSON.parse(contestFile);
         contest.players = fileContent.split("\n");
-        fs.writeFileSync("contestInfo.json", JSON.stringify(contest));
+        contestInfo.save(contest);
         return;
     }
 
@@ -29,8 +29,7 @@ function addPlayer(options) {
         return;
     }
 
-    const fileContent = fs.readFileSync("./contestInfo.json");
-    const contest = JSON.parse(fileContent);
+    const contest = contestInfo.read();
     const playerName = options._[1];
     
     if(contest.players.indexOf(playerName) != -1) {
@@ -39,20 +38,18 @@ function addPlayer(options) {
     }
 
     contest.players.push(playerName);
-    fs.writeFileSync("./contestInfo.json", JSON.stringify(contest));
-    console.log(`Player ${playerName} successfuly added.`);
+    contestInfo.save(contest);
+    console.log(`Player ${playerName} added.`);
 }
 
 function removePlayer(options) {
-    const fs = require("node:fs");
 
     if(!options._[1]) {
         console.log("No username specified");
         return;
     }
 
-    const fileContent = fs.readFileSync("contestInfo.json");
-    const contest = JSON.parse(fileContent);
+    const contest = contestInfo.read();
     const playerName = options._[1];
     const indexOfPlayer = contest.players.indexOf(playerName);
     if(indexOfPlayer == -1) {
@@ -61,7 +58,7 @@ function removePlayer(options) {
     }
 
     contest.players.splice(indexOfPlayer, 1);
-    fs.writeFileSync("contestInfo.json", JSON.stringify(contest));
+    contestInfo.save(contest);
     console.log(`Player ${playerName} removed.`);
 }
 
