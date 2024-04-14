@@ -9,6 +9,9 @@ switch(options._[0]) {
     case "init":
         utils.init();
         break;
+    case "add-player":
+        utils.addPlayer(options);
+        break;
     default:
         yargs.showHelp()
         break;
