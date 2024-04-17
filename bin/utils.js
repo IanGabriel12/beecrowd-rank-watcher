@@ -1,4 +1,5 @@
 const contestInfo = require("./file");
+const web = require("./web");
 
 function createContest() {
     const rl = require("readline-sync");
@@ -64,44 +65,27 @@ function removePlayer(options) {
 }
 
 
-const QUESTIONS = ['A', 'B', 'C', 'D'];
-function fetchPlayersQuestions() {
-    return {
-        "esther.wanderley.110": {
-            'A': true,
-            'B': true,
-            'C': true,
-            'D': true,
-        },
-        "beatriz.gouveia.111": {
-            'A': true,
-            'B': false,
-            'C': false,
-            'D': true,
-        },
-        "juliana.santiago.098" : {
-            'A': true,
-            'B': false,
-            'C': false,
-            'D': true,
-        },
-    };
-}
-
-
-function watchContestCallback(previousMap) {
+async function watchContestCallback(playersArr, previousMap) {
     console.log("NEW FETCH");
-    const playersQuestionsMap = fetchPlayersQuestions();
+    const currMap = await web.getPlayersQuestions();
+    const filteredMap = new Map();
     const newBalloons = [];
 
-    for(let player of Object.keys(previousMap)) {
-        if(!playersQuestionsMap[player]) continue;
-        for(let question of QUESTIONS) {
+    for(player of playersArr) {
+        if(currMap.has(player)) {
+            filteredMap.set(player, currMap.get(player));
+        } else {
+            console.log(`WARNING: Player ${player} not found in current map`);
+        }
+    }
 
-            const prevValue = previousMap[player][question];
-            const newValue = playersQuestionsMap[player][question];
+    for(player of playersArr) {
+        if(!filteredMap.has(player)) continue;
 
-            if(prevValue == false && newValue == true) {
+        const yesQuestionsFromPlayer = filteredMap.get(player);
+        for(question of yesQuestionsFromPlayer) {
+            const hasGottemBalloon = previousMap.get(player).indexOf(question) != -1;
+            if(!hasGottemBalloon) {
                 newBalloons.push({player, question});
             }
         }
@@ -110,29 +94,26 @@ function watchContestCallback(previousMap) {
     if(newBalloons.length == 0) {
         console.log("No new balloons");
     } else {
-        for(let entry of newBalloons) {
+        for(entry of newBalloons) {
             console.log(`Player ${entry.player} got problem ${entry.question}`);
         }
     }
 
-    return playersQuestionsMap;
+    return filteredMap;
 }
 
-function watchContestChanges() {
+async function watchContestChanges() {
     const contest = contestInfo.read();
+    let playersMap = new Map();
 
-    let currMap = {};
-    for(let player of contest.players) {
-        currMap[player] = {}
-        for(let question of QUESTIONS) {
-            currMap[player][question] = false;
-        }
+    for(player of contest.players) {
+        playersMap.set(player, []);
     }
 
     console.log(`Watching contest ${contest.name} with rank in ${contest.url}`);
-    setInterval(() => {
-        currMap = watchContestCallback(currMap);
-    }, 1000);
+    setInterval(async () => {
+        playersMap = await watchContestCallback(contest.players, playersMap);
+    }, 10000);
 }
 
 
