@@ -66,7 +66,7 @@ function removePlayer(options) {
 
 
 async function watchContestCallback(playersArr, previousMap) {
-    console.log("NEW FETCH");
+    console.log("FETCHING");
     const currMap = await web.getPlayersQuestions();
     const filteredMap = new Map();
     const newBalloons = [];
@@ -94,8 +94,11 @@ async function watchContestCallback(playersArr, previousMap) {
     if(newBalloons.length == 0) {
         console.log("No new balloons");
     } else {
+        const PADDING_PLAYER = 30;
+        const PADDING_QUESTION = 10;
+        console.log("PLAYER".padEnd(PADDING_PLAYER) + "|" + "QUESTION".padEnd(PADDING_QUESTION));
         for(entry of newBalloons) {
-            console.log(`Player ${entry.player} got problem ${entry.question}`);
+            console.log(entry.player.padEnd(PADDING_PLAYER) + "|" + entry.question.padEnd(PADDING_QUESTION));
         }
     }
 
