@@ -102,6 +102,7 @@ async function watchContestChanges() {
     }
 
     console.log(`Watching contest ${contest.name} with rank in ${contest.url}`);
+    playersMap = await watchContestCallback(contest.players, playersMap);
     setInterval(async () => {
         playersMap = await watchContestCallback(contest.players, playersMap);
     }, 10000);
