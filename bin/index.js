@@ -39,4 +39,8 @@ program.command("remove <player>", "Remove player from tracking balloons", (yarg
     utils.remPlayer(argv.player);
 })
 
+program.command("watch", "Start tracking balloons", () => {}, () => {
+    utils.watch();
+});
+
 program.argv;
