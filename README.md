@@ -1,0 +1,3 @@
+# Beecrowd contest watcher
+
+Documentation soon...

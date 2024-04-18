@@ -15,24 +15,19 @@ function createContest() {
     contestInfo.save(contest);
 }
 
-function addPlayer(options) {
+function addPlayer(argument, isFile) {
     const fs = require("node:fs");
-    if(options.file) {
+    if(isFile) {
         const contest = contestInfo.read();
-        const fileContent = fs.readFileSync(options.file, 'utf8');
+        const fileContent = fs.readFileSync(argument, 'utf8');
         contest.players = fileContent.split("\n");
         contestInfo.save(contest);
         console.log(`${contest.players.length} players added.`);
         return;
     }
 
-    if(!options._[1]) {
-        console.log("No username specified.");
-        return;
-    }
-
     const contest = contestInfo.read();
-    const playerName = options._[1];
+    const playerName = argument;
     
     if(contest.players.indexOf(playerName) != -1) {
         console.log(`Player ${playerName} already exists`);
@@ -44,15 +39,8 @@ function addPlayer(options) {
     console.log(`Player ${playerName} added.`);
 }
 
-function removePlayer(options) {
-
-    if(!options._[1]) {
-        console.log("No username specified");
-        return;
-    }
-
+function removePlayer(playerName) {
     const contest = contestInfo.read();
-    const playerName = options._[1];
     const indexOfPlayer = contest.players.indexOf(playerName);
     if(indexOfPlayer == -1) {
         console.log("Player not found.");
