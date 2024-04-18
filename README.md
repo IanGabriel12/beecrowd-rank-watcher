@@ -22,12 +22,17 @@ You will receive a prompt to configure contest name and url. The name can be wha
 ```bash
 beewatch add <playerName>
 ```
-To track a single username or
+To track a single username.
 
 ```bash
 beewatch add --file <filePath>
 ```
-To track all the users in the file
+To track all the users in the file.
+
+```bash
+beewatch add-all
+```
+To track all the players current registered in the contest.
 
 ### Remove players from tracking
 

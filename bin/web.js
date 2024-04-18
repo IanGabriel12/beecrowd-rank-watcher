@@ -18,6 +18,7 @@ async function getPlayersQuestions() {
     
     for(row of $('#contest-rank tbody tr')) {
         const playerName = $(row).find('td.c-contestant a').text();
+        if(!playerName) continue;
         const playerQuestions = [];
         for(yesCell of $(row).find(".c-yes")) {
             const questionNameClass = $(yesCell).attr('class').split(' ')[1];
@@ -31,8 +32,21 @@ async function getPlayersQuestions() {
     return playersMap;
 }
 
+async function getRegisteredPlayers() {
+    const $ = await getContestDocument();
+    const players = [];
+    for(row of $('#contest-rank tbody tr')) {
+        const playerName = $(row).find('td.c-contestant a').text();
+        if(!playerName) continue;
+        players.push(playerName);
+    }
+
+    return players;
+}
+
 module.exports = {
     getQuestionsCount,
     getContestDocument,
-    getPlayersQuestions
+    getPlayersQuestions,
+    getRegisteredPlayers
 }

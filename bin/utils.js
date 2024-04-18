@@ -39,6 +39,14 @@ function addPlayer(argument, isFile) {
     console.log(`Player ${playerName} added.`);
 }
 
+async function addAllPlayers() {
+    const contest = contestInfo.read();
+    const players = await web.getRegisteredPlayers();
+    contest.players = players;
+    contestInfo.save(contest);
+    console.log(`${players.length} players added.`);
+}
+
 function removePlayer(playerName) {
     const contest = contestInfo.read();
     const indexOfPlayer = contest.players.indexOf(playerName);
@@ -113,5 +121,6 @@ module.exports = {
     init: createContest,
     addPlayer: addPlayer,
     remPlayer: removePlayer,
-    watch: watchContestChanges
+    watch: watchContestChanges,
+    addAllPlayers: addAllPlayers
 }

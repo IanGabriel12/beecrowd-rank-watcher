@@ -31,6 +31,10 @@ program
     utils.addPlayer(argv.player, argv.file);
 })
 
+program.command("add-all", "Add all registered players to track baloons", () => {}, () => {
+    utils.addAllPlayers();
+});
+
 program.command("remove <player>", "Remove player from tracking balloons", (yargs) => {
     yargs.positional("player", {
         describe: "Player beecrowd username",
